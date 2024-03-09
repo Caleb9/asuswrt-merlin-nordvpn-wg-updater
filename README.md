@@ -16,18 +16,34 @@ work has been adapted from
 periodically on your router, queries NordVPN API for the recommended
 server, and modifies the client settings accordingly.
 
+## How?
+
+The script queries NordVPN API for recommended server and updates
+`nvram` and `wg` settings corresponding to an instance of a client on
+the router.
+
+__The script intentionally only updates _enabled_ clients, so if you
+disable a client, it will not update it to the recommended server__.
+
 ## Limitations / Requirements
 
 For simplicity, setting up the script requires that you already have a
-WireGuard NordVPN client set up on the router. The script
-intentionally only updates _enabled_ clients, so if you disable a
-client, it will not update it to the recommended server.
+WireGuard NordVPN client set up on the router.
 
 ## Tested On
 
 RT-AX86U Pro with Asuswrt-Merlin version 3004.388.6_2 
 
 ## Setup
+
+### TL;DR
+
+For those proficient in Asuswrt-Merlin management, just setup an
+instance of NordVPN WireGuard client on the router, upload the
+`nordvpn-updater.sh` script, download `jq` binary to `/opt/usr/bin/`
+and schedule execution with a cron job.
+
+### Detailed Instructions
 
 1. Use
    [sfiorini/NordVPN-Wireguard](https://github.com/sfiorini/NordVPN-Wireguard)
