@@ -117,7 +117,7 @@ and schedule execution with a cron job.
 
 8. `cru` entries get reset on router reboot. To make the schedule
    persistent, you need to add the `cru` command to the end of
-   `/jffs/scripts/services-start` file. E.g., using the `vi` editor:
+   `/jffs/scripts/services-start` file:
    
    ```bash
    vi /jffs/scripts/services-start
@@ -127,12 +127,9 @@ and schedule execution with a cron job.
    keys. Then type:
    
    ```
-   cru a nordvpn-updater "00 * * * * /bin/sh /jffs/scripts/nordvpn-updater.sh 5 > /var/log/nordvpn-updater.log 2>&1"
+   echo 'cru a nordvpn-updater "00 * * * * /bin/sh /jffs/scripts/nordvpn-updater.sh 5 > /var/log/nordvpn-updater.log 2>&1"' >> /jffs/scripts/services-start
    ```
-   
-   Press `ESC` button, followed by `:`, `w`, `q`, `ENTER` to save and
-   quit. If you mess up, use `ESC`, `:`, `q`, `!`, `ENTER` to quit
-   without saving and try again ;).
+   Adjust the command for different client instance or cron schedule.
    
 9. You can disable SSH access to the router via the web interface
    again if you don't use it for anything.
@@ -147,8 +144,11 @@ Remove the schedule and files:
 cru d nordvpn-updater && rm /jffs/scripts/nordvpn-updater.sh /opt/usr/bin/jq /var/log/nordvpn-updater.log
 ```
 
-Remove `cru` line from `/jffs/scripts/services-start` file (again with
-`vi` press `i`, edit the file and then `ESC`, `:`, `w`, `q`, `ENTER`).
+Remove `cru` line from `/jffs/scripts/services-start` file:
+
+```bash
+sed -i '/nordvpn-updater/d' /jffs/scripts/services-start
+```
 
 ---
 
