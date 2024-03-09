@@ -94,7 +94,7 @@ and schedule execution with a cron job.
    example, for client 5 do:
    
    ```bash
-   sh /jffs/scripts/nordvpn-updater.sh 5
+   sh /jffs/scripts/nordvpn-updater.sh wgc5
    ```
 
    The output should say `Setting wgc5 to {recommended
@@ -107,12 +107,12 @@ and schedule execution with a cron job.
    example, to update the `wgc5` client instance once every hour, do:
    
    ```bash
-   cru a nordvpn-updater "00 * * * * /bin/sh /jffs/scripts/nordvpn-updater.sh 5 > /var/log/nordvpn-updater.log 2>&1"
+   cru a nordvpn-updater "00 * * * * /bin/sh /jffs/scripts/nordvpn-updater.sh wgc5 > /var/log/nordvpn-updater.log 2>&1"
    ```
 
-   Note the `5` in the above command needs to be changed to your VPN
-   client's instance number. The `/var/log/nordvpn-updater.log` file
-   will then contain the log of the last execution for inspection if
+   Note the `wgc5` in the above command needs to be changed to your
+   VPN client's instance. The `/var/log/nordvpn-updater.log` file will
+   then contain the log of the last execution for inspection if
    needed.
 
 8. `cru` entries get reset on router reboot. To make the schedule
@@ -120,7 +120,7 @@ and schedule execution with a cron job.
    `/jffs/scripts/services-start` file:
    
    ```bash
-   echo 'cru a nordvpn-updater "00 * * * * /bin/sh /jffs/scripts/nordvpn-updater.sh 5 > /var/log/nordvpn-updater.log 2>&1"' >> /jffs/scripts/services-start
+   echo 'cru a nordvpn-updater "00 * * * * /bin/sh /jffs/scripts/nordvpn-updater.sh wgc5 > /var/log/nordvpn-updater.log 2>&1"' >> /jffs/scripts/services-start
    ```
    
    Adjust the command for different client instance or cron schedule.
@@ -148,4 +148,4 @@ sed -i '/nordvpn-updater/d' /jffs/scripts/services-start
 
 What? Still here?! Well, I hope you'll find this work useful :). Feel
 free to raise issues or report a working setup in
-[Discussions](https://github.com/Caleb9/asuswrt-merlin-nordvpn-wg-updater/discussions).
+[Discussions](https://github.com/caleb9/asuswrt-merlin-nordvpn-wg-updater/discussions).

@@ -19,19 +19,19 @@
 # Schedule execution e.g. every hour and log to
 # /var/log/nordvpn-updater.log:
 #
-#     cru a nordvpn-updater "00 * * * * /bin/sh /jffs/scripts/nordvpn-updater.sh 5  > /var/log/nordvpn-updater.log 2>&1"
+#     cru a nordvpn-updater "00 * * * * /bin/sh /jffs/scripts/nordvpn-updater.sh wgc5  > /var/log/nordvpn-updater.log 2>&1"
 #
 # Add the above line to /jffs/scripts/services-start so it gets
 # reapplied after a reboot.
 
 
 if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 wgc_client_number"
-    echo "Example: $0 5"
+    echo "Usage: $0 wgc_client_instance"
+    echo "Example: $0 wgc5"
     exit 1
 fi
 
-client=wgc$1
+client=$1
 
 # Only update settings for an enabled client. This avoids dealing with
 # private key and other complex settings.
