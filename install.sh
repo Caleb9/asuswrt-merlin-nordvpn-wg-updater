@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# https://github.com/caleb9/asuswrt-merlin-nordvpn-wg-updater
+#
+# Installation script for nordvpn-updater.sh
+
+
 # Bail out on error
 set -e
 
