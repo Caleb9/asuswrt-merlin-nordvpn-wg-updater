@@ -31,6 +31,11 @@ For simplicity, setting up the script requires that you already have a
 WireGuard NordVPN client set up on the router.
 
 The installation script requires a minimum Asuswrt-Merlin version 388.
+
+At the moment, setting a specific country, city or server group is not
+supported (it might come later) -- the script just sets the client to
+connect to the default recommended server, which is likely going to be
+the server for your real location.
    
 ## Tested On
 
