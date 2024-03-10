@@ -30,6 +30,8 @@ disable a client, it will not update it to the recommended server__.
 For simplicity, setting up the script requires that you already have a
 WireGuard NordVPN client set up on the router.
 
+The installation script requires a minimum Asuswrt-Merlin version 388.
+   
 ## Tested On
 
 RT-AX86U Pro with Asuswrt-Merlin version 3004.388.6_2 
@@ -39,9 +41,8 @@ RT-AX86U Pro with Asuswrt-Merlin version 3004.388.6_2
 ### TL;DR
 
 For those proficient in Asuswrt-Merlin management, just setup an
-instance of NordVPN WireGuard client on the router, upload the
-`nordvpn-updater.sh` script, download `jq` binary to `/opt/usr/bin/`
-and schedule execution with a cron job.
+instance of NordVPN WireGuard client, and use the `install.sh` script
+on the router.
 
 ### Detailed Instructions
 
@@ -50,8 +51,7 @@ and schedule execution with a cron job.
    script, or a similar one, to obtain the initial WireGuard config
    file on your PC. Then upload it to the router via its web interface
    and enable the client. Note down the __instance number__ of the
-   WireGuard VPN client; you'll need to pass it to the
-   `nordvpn-updater.sh` script later on.
+   WireGuard VPN client; you'll need it during script installation later on.
 
    <img src="wireguard-setup1.png" />
    
@@ -67,81 +67,41 @@ and schedule execution with a cron job.
 
    <img src="wireguard-setup3.png" />
 
-4. The script depends on [jq](https://github.com/jqlang/jq) command,
-   which is not available by default on Asuswrt-Merlin. SSH to the
-   router and download [jq](https://github.com/jqlang/jq) to
-   `/opt/usr/bin`. Make sure to select the file for the architecture
-   matching your router's CPU:
+4. Open SSH session to the router from your PC (replace
+   "router-login-name" with the one configured on Administration ->
+   System -> Router Login Name of router's web UI):
    
    ```bash
-   wget -O /opt/usr/bin/jq https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-arm64
-   ```
-   
-   Set executable permission on the file:
-   
-   ```bash
-   chmod +x /opt/usr/bin/jq
-   ```
-   
-   Confirm that it works with e.g., `jq --version`.
-   
-5. Upload the `nordvpn-updater.sh` script to the router (e.g., using
-   `scp`) and put it in `/jffs/scripts`. Set executable permission on
-   it with `chmod +x /jffs/scripts/nordvpn-updater.sh`.
-
-6. It's a good time to test if everything works. In the SSH session,
-   run the script with the client instance number from step 1. For
-   example, for client 5 do:
-   
-   ```bash
-   sh /jffs/scripts/nordvpn-updater.sh wgc5
+   ssh router-login-name@192.168.50.1
    ```
 
-   The output should say `Setting wgc5 to {recommended
-   server}`. Confirm in the router's web interface in VPN -> VPN
-   Client that the client instance has "Description" and "Endpoint
-   Address:Port" fields updated accordingly.
-   
-7. Schedule periodic execution, e.g., with
-   [`cru`](https://github.com/RMerl/asuswrt-merlin.ng/wiki/Scheduled-tasks-(cron-jobs)). For
-   example, to update the `wgc5` client instance once every hour, do:
-   
+5. Download and run the installation script
+
    ```bash
-   cru a nordvpn-updater "00 * * * * /bin/sh /jffs/scripts/nordvpn-updater.sh wgc5 > /var/log/nordvpn-updater.log 2>&1"
+   wget https://raw.githubusercontent.com/Caleb9/asuswrt-merlin-nordvpn-wg-updater/main/install.sh
+
+   sh install.sh
    ```
 
-   Note the `wgc5` in the above command needs to be changed to your
-   VPN client's instance. The `/var/log/nordvpn-updater.log` file will
-   then contain the log of the last execution for inspection if
-   needed.
-
-8. `cru` entries get reset on router reboot. To make the schedule
-   persistent, you need to add the `cru` command to the end of
-   `/jffs/scripts/services-start` file:
+   The script will ask you for the client instance from step 1, that
+   will be set to recommended server.
    
-   ```bash
-   echo 'cru a nordvpn-updater "00 * * * * /bin/sh /jffs/scripts/nordvpn-updater.sh wgc5 > /var/log/nordvpn-updater.log 2>&1"' >> /jffs/scripts/services-start
-   ```
-   
-   Adjust the command for different client instance or cron schedule.
-   
-9. You can disable SSH access to the router via the web interface
+6. You can disable SSH access to the router via the web interface
    again if you don't use it for anything.
-10. Enjoy an NordVPN client connecting to the recommended server on
-    your router :).
+
+7. Enjoy an NordVPN client connecting to the recommended server on
+   your router :).
 
 ## Uninstall
 
-Remove the schedule and files:
+Download and run the uninstallation script in SSH session
 
 ```bash
-cru d nordvpn-updater && rm /jffs/scripts/nordvpn-updater.sh /opt/usr/bin/jq /var/log/nordvpn-updater.log
-```
+wget https://raw.githubusercontent.com/Caleb9/asuswrt-merlin-nordvpn-wg-updater/main/uninstall.sh
 
-Remove `cru` line from `/jffs/scripts/services-start` file:
+sh uninstall.sh
 
-```bash
-sed -i '/nordvpn-updater/d' /jffs/scripts/services-start
+rm uninstall.sh
 ```
 
 ---
