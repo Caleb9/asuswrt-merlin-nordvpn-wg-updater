@@ -120,15 +120,9 @@ and schedule execution with a cron job.
    `/jffs/scripts/services-start` file:
    
    ```bash
-   vi /jffs/scripts/services-start
-   ```
-   
-   Press `i` and move down to the end of the file with arrow
-   keys. Then type:
-   
-   ```
    echo 'cru a nordvpn-updater "00 * * * * /bin/sh /jffs/scripts/nordvpn-updater.sh 5 > /var/log/nordvpn-updater.log 2>&1"' >> /jffs/scripts/services-start
    ```
+   
    Adjust the command for different client instance or cron schedule.
    
 9. You can disable SSH access to the router via the web interface
