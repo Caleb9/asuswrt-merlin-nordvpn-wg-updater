@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# https://github.com/caleb9/asuswrt-merlin-nordvpn-wg-updater
+# Source: https://github.com/caleb9/asuswrt-merlin-nordvpn-wg-updater
 #
 # Uninstalation script for nordvpn-updater.sh
 

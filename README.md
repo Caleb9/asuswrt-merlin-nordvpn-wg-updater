@@ -58,7 +58,7 @@ on the router.
    and enable the client. Note down the __instance number__ of the
    WireGuard VPN client; you'll need it during script installation later on.
 
-   <img src="wireguard-setup1.png" />
+   <img src="screenshots/wireguard-setup1.png" />
    
    If you already have a client set up and want to test the script, I
    recommend setting up a separate client instance.
@@ -66,11 +66,11 @@ on the router.
 2. In the router web interface, enable JFFS on the Administration /
    System page
    
-   <img src="wireguard-setup2.png" />
+   <img src="screenshots/wireguard-setup2.png" />
 
 3. Enable SSH access
 
-   <img src="wireguard-setup3.png" />
+   <img src="screenshots/wireguard-setup3.png" />
 
 4. Open SSH session to the router from your PC (replace
    "router-login-name" with the one configured on Administration ->
