@@ -35,9 +35,9 @@ client=$1
 
 # Only update settings for an enabled client. This avoids dealing with
 # private key and other complex settings.
-wgc_enabled=`nvram get ${client}_enable`
-if [[ -z "${wgc_enabled}" ]]; then
-    echo "${client} is not set up or is disabled"
+wgc_enabled=$(nvram get "$client"_enable)
+if [ -z "$wgc_enabled" ]; then
+    echo "$(date): $client is not set up or is disabled"
     exit 2
 fi
 
@@ -47,19 +47,19 @@ curl -s "https://api.nordvpn.com/v1/servers/recommendations?&filters\[servers_te
     | /opt/usr/bin/jq -r '.[]|.hostname, .station, (.technologies|.[].metadata|.[].value)' \
 	 > /tmp/Peer.txt
 
-endpoint=`grep -m 1 -o '.*' /tmp/Peer.txt | tail -n 1`
-address=`grep -m 2 -o '.*' /tmp/Peer.txt | tail -n 1`
-public_key=`grep -m 3 -o '.*' /tmp/Peer.txt | tail -n 1`
+endpoint=$(grep -m 1 -o '.*' /tmp/Peer.txt | tail -n 1)
+address=$(grep -m 2 -o '.*' /tmp/Peer.txt | tail -n 1)
+public_key=$(grep -m 3 -o '.*' /tmp/Peer.txt | tail -n 1)
 
 rm /tmp/Peer.txt
 
-server=`echo ${endpoint} | cut -f 1 -d \.`
+server=$(echo "$endpoint" | cut -f 1 -d \.)
 
-echo "Setting ${client} to ${server}"
+echo "$(date): setting $client to $server"
 
-nvram set ${client}_desc="${server} (recommended)"
-nvram set ${client}_ep_addr=${endpoint}
-nvram set ${client}_ep_addr_r=${address}
-nvram set ${client}_ppub=${public_key}
+nvram set "$client"_desc="$server (recommended)"
+nvram set "$client"_ep_addr="$endpoint"
+nvram set "$client"_ep_addr_r="$address"
+nvram set "$client"_ppub="$public_key"
 
-wg set ${client} peer ${public_key} endpoint ${endpoint}:51820
+wg set "$client" peer "$public_key" endpoint "$endpoint":51820

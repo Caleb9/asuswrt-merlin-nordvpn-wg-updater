@@ -154,12 +154,12 @@ wget -qO /jffs/scripts/nordvpn-updater.sh \
 chmod 755 /jffs/scripts/nordvpn-updater.sh
 
 # Schedule execution
-schedule="00 * * * *"
+schedule="00 */2 * * *"
 log_file="/var/log/nordvpn-updater-${client_instance}.log"
 job_id="nordvpn-updater-$client_instance"
 cru="cru a $job_id "
 while true; do
-    printf "Schedule setting %s to recommended server every full-hour? " "$client_instance"
+    printf "Schedule setting %s to recommended server every two-hours? " "$client_instance"
     printf "[Y/n, c: custom-schedule]: "
     read -r update_crontab
     case $(echo "$update_crontab" | xargs) in
