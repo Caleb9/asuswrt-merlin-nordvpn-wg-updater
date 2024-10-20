@@ -44,7 +44,7 @@ echo -e "${col_g}enabled${col_n}"
 
 
 # Check architecture and map it to jq naming convention
-jq_dir="/opt/usr/bin"
+jq_dir="/tmp/opt/usr/bin"
 jq_file="${jq_dir}/jq"
 arch=$(uname -m)
 printf "Router architecture: "
