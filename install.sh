@@ -67,7 +67,7 @@ case "$arch" in
 	    echo "    https://github.com/jqlang/jq/releases"
 	    echo "and execute the following:"
 	    echo
-	    echo "    mkdir -p /opt/usr/bin"
+	    echo "    mkdir -p $jq_dir"
 	    echo "    wget -O $jq_file \
 https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-{correct arch suffix}"
 	    echo "    chmod +x $jq_file"
