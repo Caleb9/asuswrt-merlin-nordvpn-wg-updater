@@ -39,7 +39,11 @@ the server for your real location.
    
 ## Tested On
 
-RT-AX86U Pro with Asuswrt-Merlin version 3004.388.6_2 
+RT-AX86U Pro with Asuswrt-Merlin version >= 3004.388.6_2
+
+Also see the [Working
+setup](https://github.com/caleb9/asuswrt-merlin-nordvpn-wg-updater/discussions/1)
+discussion.
 
 ## Setup
 
