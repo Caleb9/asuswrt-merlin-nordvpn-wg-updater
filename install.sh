@@ -20,18 +20,6 @@ fail() {
     exit 1
 }
 
-# Check Asuswrt-Merlin version
-buildno=$(nvram get buildno)
-printf "Asuswrt-Merlin version: "
-if [ "$(echo "$buildno" | cut -f1 -d.)" -lt 388 ]; then
-    echo -e "${col_r}${buildno}${col_n}"
-    echo "Minimum supported version is 388, please upgrade your firmware on router's \
-Administration / Firmware Upgrade page"
-    fail
-else
-    echo -e "${col_g}${buildno}${col_n}"
-fi
-
 # Check if user-scripts are enabled
 jffs_enabled=$(nvram get jffs2_scripts)
 printf "JFFS partition: "
@@ -186,14 +174,17 @@ while true; do
     esac
 done
 
-sed -i "/$job_id/d" /jffs/scripts/services-start # Remove any old entries
+services_start="/jffs/scripts/services-start"
+touch "$services_start"
+chmod +x "$services_start"
+sed -i "/$job_id/d" "$services_start" # Remove any old entries
 if [ "$cru" != "" ]; then
     command="/bin/sh /jffs/scripts/nordvpn-updater.sh $client_instance > $log_file 2>&1"
     cru="$cru \"$schedule $command\""
     echo "Adding schedule to crontab"
     eval "$cru"
     echo "Saving schedule in /jffs/scripts/services-start"
-    echo "$cru" >> /jffs/scripts/services-start
+    echo "$cru" >> "$services_start"
     echo "Last execution output log file: $log_file"
 else
     echo -e "${col_y}nordvpn-updater.sh will NOT execute automatically${col_n}"
@@ -204,7 +195,8 @@ printf "Do you wish to run nordvpn-updater.sh now? [Y/n]: "
 read -r run_now
 case $(echo "$run_now" | xargs) in
     "" | "y" | "Y")
-	sh /jffs/scripts/nordvpn-updater.sh "$client_instance"
+	sh /jffs/scripts/nordvpn-updater.sh "$client_instance" > "$log_file" 2>&1
+	cat "$log_file"
 	;;
     *)
 	;;
