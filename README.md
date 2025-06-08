@@ -32,14 +32,14 @@ WireGuard NordVPN client set up on the router.
 
 The installation script requires a minimum Asuswrt-Merlin version 388.
 
-At the moment, setting a specific country, city or server group is not
-supported (it might come later) -- the script just sets the client to
-connect to the default recommended server, which is likely going to be
-the server for your real location.
+At the moment, setting a specific city or server group is not
+supported (it might come later). Optionally you can specify the
+country to connect to -- otherwise the script just sets the client the
+default recommended server for your real location.
    
 ## Tested On
 
-RT-AX86U Pro with Asuswrt-Merlin version >= 3004.388.6_2
+RT-AX86U Pro with Asuswrt-Merlin version >= 3006.104.4
 
 Also see the [Working
 setup](https://github.com/caleb9/asuswrt-merlin-nordvpn-wg-updater/discussions/1)

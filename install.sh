@@ -107,6 +107,11 @@ while true; do
     printf "Select client instance for recommended server [1-%s, e: exit]: " "$client_count"
     read -r index
     index=$(echo "$index" | xargs)
+    if [ -z "$index" ]; then
+	echo -e "Invalid input"
+	continue
+    fi
+    
     if [ "$index" = "e" ] || [ "$index" = "E" ]; then
 	echo "Bye"
 	exit 0
@@ -115,6 +120,7 @@ while true; do
     is_numeric=$(echo "$index" | grep -E "^[0-9]+$")
     if [ -z "$is_numeric" ] || [ "$index" -lt 1 ] || [ "$index" -gt $client_count ]; then
 	echo -e "${col_r}Invalid value${col_n}"
+	continue
     else
 	break	
     fi
@@ -140,6 +146,28 @@ echo "Downloading nordvpn-updater.sh to /jffs/scripts"
 wget -qO /jffs/scripts/nordvpn-updater.sh \
      https://raw.githubusercontent.com/caleb9/asuswrt-merlin-nordvpn-wg-updater/main/nordvpn-updater.sh
 chmod 755 /jffs/scripts/nordvpn-updater.sh
+
+# Select server country
+country=""
+while true; do
+    printf "Server country (leave empty for fastest server): "
+    read -r country
+    country=$(echo "$country" | xargs)
+    if [ -z "$country" ]; then
+	echo "Using recommended server for your location"
+	break
+    fi
+
+    # Check if valid country
+    country_id=$(curl -s "https://api.nordvpn.com/v1/servers/countries" \
+		     | $jq_file -r ".[] | select(.name | match(\"^$country$\";\"i\")) | [.id]")
+    if [ -z "$country_id" ]; then
+	echo -e "${col_r}Could not find NordVPN server in $country, please try another country${col_n}"
+	continue
+    fi
+    echo "Using recommended server for $country"
+    break
+done
 
 # Schedule execution
 schedule="00 */2 * * *"
@@ -179,11 +207,11 @@ touch "$services_start"
 chmod +x "$services_start"
 sed -i "/$job_id/d" "$services_start" # Remove any old entries
 if [ "$cru" != "" ]; then
-    command="/bin/sh /jffs/scripts/nordvpn-updater.sh $client_instance > $log_file 2>&1"
+    command="/bin/sh /jffs/scripts/nordvpn-updater.sh $client_instance $country > $log_file 2>&1"
     cru="$cru \"$schedule $command\""
     echo "Adding schedule to crontab"
     eval "$cru"
-    echo "Saving schedule in /jffs/scripts/services-start"
+    echo "Saving schedule in $services_start"
     echo "$cru" >> "$services_start"
     echo "Last execution output log file: $log_file"
 else
@@ -195,10 +223,11 @@ printf "Do you wish to run nordvpn-updater.sh now? [Y/n]: "
 read -r run_now
 case $(echo "$run_now" | xargs) in
     "" | "y" | "Y")
-	sh /jffs/scripts/nordvpn-updater.sh "$client_instance" > "$log_file" 2>&1
+	eval "sh /jffs/scripts/nordvpn-updater.sh $client_instance $country > $log_file 2>&1"
 	cat "$log_file"
 	;;
     *)
+	echo "Skipping initial run"
 	;;
 esac
 

@@ -24,9 +24,9 @@ case "$confirm" in
 	echo "removing execution schedule from /jffs/scripts/services-start"
 	sed -i '/nordvpn-updater/d' /jffs/scripts/services-start
 	echo "removing files"
-	rm -rfv /jffs/scripts/nordvpn-updater.sh
-	rm -rfv /opt/usr/bin
-	rm -rfv /var/log/nordvpn-updater*.log
+	rm -fv /jffs/scripts/nordvpn-updater.sh
+	rm -fv /opt/usr/bin/jq
+	rm -fv /var/log/nordvpn-updater*.log
 	echo -e "${col_g}Done${col_n}"
 	echo
 	echo "Note that any WireGuard client instances configured by the script are left untouched."
