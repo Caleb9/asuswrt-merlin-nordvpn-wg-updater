@@ -58,7 +58,7 @@ if [ "$#" -gt 1 ]; then
     country_id=$(curl -s "https://api.nordvpn.com/v1/servers/countries" \
 		     | "$jq" -r ".[] | select(.name |match(\"^$country$\";\"i\")) | [.id] | \"\(.[0])\"")
     if [ -z "$country_id" ]; then
-	echo "$(date): could not find NordVPN server in $2"
+	echo "$(date): could not find NordVPN server in $country"
 	exit 3
     fi
     # Query NordVPN API for recommended server in selected country
