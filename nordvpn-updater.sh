@@ -76,7 +76,7 @@ fi
 
 endpoint=$(grep -m 1 -o '.*' /tmp/Peer.txt | tail -n 1)
 address=$(grep -m 2 -o '.*' /tmp/Peer.txt | tail -n 1)
-public_key=$(grep -m 3 -o '.*' /tmp/Peer.txt | tail -n 1)
+public_key=$(grep -m 5 -o '.*' /tmp/Peer.txt | tail -n 1)
 
 rm /tmp/Peer.txt
 
